@@ -25,13 +25,13 @@ class projects (models.Model):
         choices= projectstatus.choices,
         default= projectstatus.PENDING,
     )
-    desciption = models.TextField()
+    description = models.TextField()
     create_at = models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)
 
     #this for relationship/ one to many the many is the projects
     category = models.ForeignKey(category,on_delete=models.PROTECT)
-    user = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE)
+    user = models.ForeignKey(AUTH_USER_MODEL,on_delete=models.CASCADE,null=True)
     #this for the date to be string
     def __str__(self):
         return self.title
