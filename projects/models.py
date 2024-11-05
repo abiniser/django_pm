@@ -37,10 +37,10 @@ class projects (models.Model):
         return self.title
 #_______________________________________________________________________
 class task(models.Model):
-    desciption = models.TextField()
+    description = models.TextField()
     is_complted =models.BooleanField(default=False)
     project = models.ForeignKey(projects,on_delete=models.CASCADE)
     def __str__(self):
-        return self.desciption
+        return self.description
 
     

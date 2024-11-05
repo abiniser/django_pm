@@ -1,9 +1,12 @@
 {% load i18n %}
 {% block content %}
     <h3>{% trans 'my Project' %}</h3>
-    <ul>{% for Project in object_list %}
-            <li>{{ Project.title }}</li>
+    <ul>
+        {% for Project in object_list %}
+            <!-- the edit will appear instead project_update of  -->
+            <li>{{ Project.title }} <a href="{% url 'project_update' Project.id  %}" >Edit</a></li>
         {% empty %}
             <li>{% trans 'there are no Projects to show' %}</li>
+        {% endfor %}
     </ul>        
 {% endblock %}
