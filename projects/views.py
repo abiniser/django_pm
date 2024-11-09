@@ -6,7 +6,15 @@ from . import models, forms
 class projectlistview(ListView):
     model = models.projects
     template_name = 'project/list.html'
-#_______________________________________________________________________
+    paginate_by=6
+    def get_queryset(self):
+        query_set = super().get_queryset() 
+        where = {}
+        q = self.request.GET.get('q', None)
+        if q:
+            where['title__icontains'] = q
+        return query_set.filter(**where)
+#__________________________________________________________
 class projectCreateview(CreateView):
     model = models.projects
     form_class = forms.Projectcreateform
@@ -29,17 +37,17 @@ class ProjectDeleteview(DeleteView):
 #________________________________________________________________________________
 class TaskCreateview(CreateView):
     model = models.task
-    fields= ['project, description']
+    fields= ['project', 'description']
     #this is for to give Error if someone try to ask for the t TaskCreate on the browse
-    http_method_names =['[post]']
+    http_method_names =['post']
     def get_success_url(self):
-        return reverse('project_Update',args = [self.object.project.id])
+        return reverse( 'project_update',args = [self.object.project.id])
 #__________________________________________________________________________________
 class TaskUpdateview(UpdateView):
     model = models.task
     fields= ['is_completed']
     #this is for to give Error if someone try to ask for the t TaskCreate on the browse
-    http_method_names =['[post]']
+    http_method_names =['post']
     def get_success_url(self):
         return reverse('project_Update',args = [self.object.project.id])
 #_____________________________________________________________________________________
