@@ -2,8 +2,10 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView,CreateView,UpdateView,DeleteView
 from django.shortcuts import render
 from . import models, forms
+from django.contrib.auth.mixins import LoginRequiredMixin
+# LoginRequiredMixin is to stop none register user from useing the projects management
 # Create your views here.
-class projectlistview(ListView):
+class projectlistview( LoginRequiredMixin, ListView):
     model = models.projects
     template_name = 'project/list.html'
     paginate_by=6
@@ -15,13 +17,13 @@ class projectlistview(ListView):
             where['title__icontains'] = q
         return query_set.filter(**where)
 #__________________________________________________________
-class projectCreateview(CreateView):
+class projectCreateview(LoginRequiredMixin,CreateView):
     model = models.projects
     form_class = forms.Projectcreateform
     template_name = 'project/create.html'
     success_url = reverse_lazy('project_list')
 #______________________________________________________________________________
-class projectUpdateview(UpdateView):
+class projectUpdateview(LoginRequiredMixin,UpdateView ):
     model = models.projects
     form_class = forms.ProjectUpdateform
     template_name = 'project/update.html'
@@ -30,12 +32,12 @@ class projectUpdateview(UpdateView):
     def get_success_url(self):
         return reverse('project_Update',args = [self.object.id])
 #_____________________________________________________________________________________________________
-class ProjectDeleteview(DeleteView):
+class ProjectDeleteview(LoginRequiredMixin,DeleteView ):
     model = models.projects
     template_name = 'project/delete.html '
     success_url = reverse_lazy('project_list')
 #________________________________________________________________________________
-class TaskCreateview(CreateView):
+class TaskCreateview(LoginRequiredMixin, CreateView):
     model = models.task
     fields= ['project', 'description']
     #this is for to give Error if someone try to ask for the t TaskCreate on the browse
@@ -43,7 +45,7 @@ class TaskCreateview(CreateView):
     def get_success_url(self):
         return reverse( 'project_update',args = [self.object.project.id])
 #__________________________________________________________________________________
-class TaskUpdateview(UpdateView):
+class TaskUpdateview(LoginRequiredMixin, UpdateView ):
     model = models.task
     fields= ['is_completed']
     #this is for to give Error if someone try to ask for the t TaskCreate on the browse
@@ -52,7 +54,7 @@ class TaskUpdateview(UpdateView):
         return reverse('project_Update',args = [self.object.project.id])
 #_____________________________________________________________________________________
 #THIS for delete the task
-class TaskDeleteview(DeleteView):
+class TaskDeleteview(LoginRequiredMixin,DeleteView):
     model = models.task
     def get_success_url(self):
         return reverse('project_Update',args = [self.object.project.id])

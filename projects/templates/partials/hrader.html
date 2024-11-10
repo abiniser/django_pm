@@ -11,7 +11,24 @@
             <a class="nav-link active" aria-current="page" href="{% url 'project_list' %}">{% trans 'Home' %}</a>
           </li>
         </ul>
-        <form method="GET" action="{% url 'project_list' %}" class="d-flex"  >
+        {% if user.is_authenticated %}
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mb-2 mb-lg-0 me-3 " >
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{user.username}}
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'profile'  %}">{% trans 'Profile'  %}</a></li>
+                    <!--<li><a class="dropdown-item" href="{% url 'logout' %}">{% trans 'Logout' %}</a></li>!-->
+                    <li><hr class="dropdown-divider"></li>
+                    <form method="post" action="{% url 'logout' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="dropdown-item btn btn-link">Logout</button>
+                    </form>
+                  </ul>
+                </li>
+          </ul>
+          <form method="GET" action="{% url 'project_list' %}" class="d-flex"  >
             <div class="input-group" >
               <input 
                 type="text"
@@ -25,6 +42,13 @@
               </button>
             </div> 
         </form>
+      {% else %}
+        <a class="btn btn-outline-light" href="{% url 'register' %}">
+        {% trans 'Register' %}
+        <a class="btn btn-outline-light" href="{% url 'Login' %}">
+          {% trans 'Login' %}
+        </a>
+      {% endif %}
       </div>
     </div>
 </nav>
