@@ -8,7 +8,7 @@ admin.site.register(models.category)
 #this for add ing new row into one of category
 @admin.register(models.projects)
 class projectadmin(admin.ModelAdmin):
-    list_display=['title','status','user','category','created_at','tasks_count']
+    list_display=['title','status','user','category','tasks_count']
     list_per_page=20
     list_editable = ['status']
 #this for avoid to many sql 
@@ -20,15 +20,15 @@ class projectadmin(admin.ModelAdmin):
     #this for avoid sql in every task count
     def get_queryset(self, request):
         query =  super().get_queryset(request)
-        query = query.annotate(task_count=Count('task'))
+        query = query.annotate(tasks_count=Count('task'))
         return query
 
 
 
 @admin.register(models.task)
 class projectadmin(admin.ModelAdmin):
-    list_display=['id','description','is_complete','project']
+    list_display=['id','description','is_complted','project']
     list_per_page=20
-    list_editable = ['is_complete']
+    list_editable = ['is_complted']
 #this for avoid to many sql 
 
